@@ -1,6 +1,13 @@
+const urlParams = new URLSearchParams(window.location.search);
+const hospitalId = urlParams.get('id');
 window.SystemCore = {
-    baseApiUrl: 'https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/',
+    baseApiUrl: `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients`,
+    hospitalApiUrl: `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}`,
     fetchData: function () {
+        fetch(this.hospitalApiUrl)
+            .then(function (response) {
+                return response.json();
+            })
         fetch(this.baseApiUrl)
             .then(function (response) {
                 return response.json();
@@ -12,28 +19,28 @@ window.SystemCore = {
                     data.map(function (item, index) {
                         content += `<tr id="data-${item.id}" >
                         <td>${item.id}</td>
+                        <td>${item.hospitalId}</td>
                         <td>${item.name}</td>
-                        <td><img src="${item.logo}" width="100"></td>
-                        <td>${item.address}</td>
-                        <td>${item.bed_number}</td>
+                        <td>${item.age}</td>
+                        <td>${item.bed_no}</td>
+                        <td>${item.description}</td>
                        <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
-                       data-dismiss="modal" onclick="SystemCore.editHospital(${item.id})">
+                       data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
                            Sửa
                        </button></td>
-                       <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button></td>
-                       <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
+                       <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
                     </tr>`;
                     });
                     document.querySelector('tbody').innerHTML = content;
                 }
             })
     },
-    addHospital: function () {
+    addPatient: function () {
         let data = {
             name: document.querySelector('[name="name"]').value,
-            logo: document.querySelector('[name="logo"]').value,
-            address: document.querySelector('[name="address"]').value,
-            bed_number: document.querySelector('[name="bed_number"]').value,
+            age: document.querySelector('[name="age"]').value,
+            bed_no: document.querySelector('[name="bed_no"]').value,
+            description: document.querySelector('[name="description"]').value,
         };
         let baseApiUrl = this.baseApiUrl;
         fetch(baseApiUrl, {
@@ -46,19 +53,19 @@ window.SystemCore = {
         })
             .then(response => response.json())
             .then(function (item) {
-                let newRow = `<tr id="data-${item.id}">
+                let newRow = `<tr id="data-${item.id}" >
             <td>${item.id}</td>
+            <td>${item.hospitalId}</td>
             <td>${item.name}</td>
-            <td><img src="${item.logo}" width="100"/></td>
-            <td>${item.address}</td>
-            <td>${item.bed_number}</td>
+            <td>${item.age}</td>
+            <td>${item.bed_no}</td>
+            <td>${item.description}</td>
             <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
-            data-dismiss="modal" onclick="SystemCore.editHopital(${item.id})">
-                Sửa
+            data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
+               Sửa
             </button></td>
-            <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHopital(${item.id})">Xóa</button></td>
-            <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
-        </tr>`;
+            <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
+            </tr>`;
                 let content = document.querySelector('tbody').innerHTML;
                 content += newRow;
                 document.querySelector('tbody').innerHTML = content;
@@ -67,25 +74,25 @@ window.SystemCore = {
                 $("exampleModal").modal('hide');
             })
     },
-    editHospital: function (hospitalId) {
-        let editUrl = `${this.baseApiUrl}/${hospitalId}`;
+    editPatient: function (patientId) {
+        let editUrl = `${this.baseApiUrl}/${patientId}`;
         fetch(editUrl)
             .then(response => response.json())
             .then(data => {
                 document.querySelector('[name="nameEdit"]').value = data.name;
-                document.querySelector('[name="logoEdit"]').value = data.logo;
-                document.querySelector('[name="addressEdit"]').value = data.address;
-                document.querySelector('[name="bed_numberEdit"]').value = data.bed_number;
-                document.querySelector('.btn-save-edit').setAttribute("onclick", `SystemCore.saveEditHospital(${data.id})`);
+                document.querySelector('[name="ageEdit"]').value = data.age;
+                document.querySelector('[name="bed_noEdit"]').value = data.bed_no;
+                document.querySelector('[name="descriptionEdit"]').value = data.description;
+                document.querySelector('.btn-save-edit').setAttribute("onclick", `SystemCore.saveEditPatient(${data.id})`);
             })
     },
-    saveEditHospital: function (hospitalId) {
-        let editUrl = `${this.baseApiUrl}/${hospitalId}`;
+    saveEditPatient: function (patientId) {
+        let editUrl = `${this.baseApiUrl}/${patientId}`;
         let data = {
             name: document.querySelector('[name="nameEdit"]').value,
-            logo: document.querySelector('[name="logoEdit"]').value,
-            address: document.querySelector('[name="addressEdit"]').value,
-            bed_number: document.querySelector('[name="bed_numberEdit"]').value,
+            age: document.querySelector('[name="ageEdit"]').value,
+            bed_no: document.querySelector('[name="bed_noEdit"]').value,
+            description: document.querySelector('[name="descriptionEdit"]').value,
         };
         fetch(editUrl, {
             method: 'PUT',
@@ -106,19 +113,19 @@ window.SystemCore = {
                         if (data.length > 0) {
                             let content = ``;
                             data.map(function (item, index) {
-                                content += `<tr id="data-${item.id}">
-                                    <td>${item.id}</td>
-                                    <td>${item.name}</td>
-                                    <td><img src="${item.logo}" width="100"/></td>
-                                    <td>${item.address}</td>
-                                    <td>${item.bed_number}</td>
-                                    <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
-                                    data-dismiss="modal" onclick="SystemCore.editHospital(${item.id})">
-                                        Sửa
-                                    </button></td>
-                                    <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button></td>
-                                    <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
-                                    </tr>`;
+                                content += `<tr id="data-${item.id}" >
+                                <td>${item.id}</td>
+                                <td>${item.hospitalId}</td>
+                                <td>${item.name}</td>
+                                <td>${item.age}</td>
+                                <td>${item.bed_no}</td>
+                                <td>${item.description}</td>
+                                <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
+                                data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
+                                   Sửa
+                                </button></td>
+                                <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
+                                </tr>`;
                             });
                             document.querySelector('tbody').innerHTML = content;
                         }
@@ -128,9 +135,9 @@ window.SystemCore = {
                 $("#exampleModalEdit").modal('hide');
             })
     },
-    removeHospital: function (hospitalId) {
+    removePatient: function (patientId) {
         // gửi request để xóa dữ liệu từ mockapi
-        let removeUrl = `${this.baseApiUrl}/${hospitalId}`;
+        let removeUrl = `${this.baseApiUrl}/${patientId}`;
         fetch(removeUrl, { method: "DELETE" })
             .then(Response => Response.json())
             .then(data => {

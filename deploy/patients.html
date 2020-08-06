@@ -21,14 +21,16 @@
 
 <body>
     <div class="container">
+        <h1></h1>
         <table class="table table-hover">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Tên Bệnh Viện</th>
-                    <th>Logo</th>
-                    <th>Địa Chỉ</th>
+                    <th>Bệnh Viện</th>
+                    <th>Tên Bệnh Nhân</th>
+                    <th>Tuổi</th>
                     <th>Số Giường</th>
+                    <th>Thông Tin</th>
                     <th><button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
                             Thêm
                         </button></th>
@@ -45,7 +47,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Thêm Bệnh Viên</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm Bệnh Nhân</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -54,74 +56,76 @@
                     <p>
                     <div class="container">
                         <div class="form-group">
-                            <label for="">Tên Bệnh Viện</label>
+                            <label for="">Tên Bệnh Nhân</label>
                             <input type="text" class="form-control" name="name">
                         </div>
                         <div class="form-group">
-                            <label for="">Logo</label>
-                            <input type="text" class="form-control" name="logo">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Địa Chỉ</label>
-                            <input type="text" class="form-control" name="address">
+                            <label for="">Tuổi</label>
+                            <input type="number" class="form-control" name="age">
                         </div>
                         <div class="form-group">
                             <label for="">Số Giường</label>
-                            <input type="number" class="form-control" name="bed_number">
+                            <input type="number" class="form-control" name="bed_no">
+                        </div>
+                        <div class="form-group">
+                            <label for="">Thông tin</label>
+                            <input type="text" class="form-control" name="description">
                         </div>
                     </div>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-add" onclick="SystemCore.addHospital()">Thêm</button>
+                    <button type="button" class="btn btn-primary btn-add"
+                        onclick="SystemCore.addPatient()">Thêm</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Modal edit form -->
-    <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Sửa Bệnh Viện</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>
-                    <div class="container">
-                        <div class="form-group">
-                            <label for="">Tên Bệnh Viện</label>
-                            <input type="text" class="form-control" name="nameEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Logo</label>
-                            <input type="text" class="form-control" name="logoEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Địa Chỉ</label>
-                            <input type="text" class="form-control" name="addressEdit">
-                        </div>
-                        <div class="form-group">
-                            <label for="">Số Giường</label>
-                            <input type="number" class="form-control" name="bed_numberEdit">
-                        </div>
-                    </div>
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-save-edit"
-                        onclick="SystemCore.saveEditHospital()">Sửa</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
+       <!-- Modal edit -->
+       <div class="modal fade" id="exampleModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title" id="exampleModalLabel">Sửa Bệnh Nhân</h5>
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                       <span aria-hidden="true">&times;</span>
+                   </button>
+               </div>
+               <div class="modal-body">
+                   <p>
+                   <div class="container">
+                       <div class="form-group">
+                           <label for="">Tên Bệnh Nhân</label>
+                           <input type="text" class="form-control" name="nameEdit">
+                       </div>
+                       <div class="form-group">
+                           <label for="">Tuổi</label>
+                           <input type="number" class="form-control" name="ageEdit">
+                       </div>
+                       <div class="form-group">
+                           <label for="">Số Giường</label>
+                           <input type="number" class="form-control" name="bed_noEdit">
+                       </div>
+                       <div class="form-group">
+                           <label for="">Thông tin</label>
+                           <input type="text" class="form-control" name="descriptionEdit">
+                       </div>
+                   </div>
+                   </p>
+               </div>
+               <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-save-edit"
+                onclick="SystemCore.saveEditPatient()">Sửa</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+               </div>
+           </div>
+       </div>
+   </div>
 </body>
-<script src="./public/js/main.js"></script>
+<script src="./public/js/patients.js"></script>
 <script>
     SystemCore.fetchData();
 </script>
