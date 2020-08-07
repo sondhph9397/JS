@@ -1,5 +1,5 @@
 window.SystemCore = {
-    baseApiUrl: 'https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/',
+    baseApiUrl: `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/`,
     fetchData: function () {
         fetch(this.baseApiUrl)
             .then(function (response) {
@@ -19,9 +19,9 @@ window.SystemCore = {
                        <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
                        data-dismiss="modal" onclick="SystemCore.editHospital(${item.id})">
                            Sửa
-                       </button></td>
-                       <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button></td>
-                       <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
+                       </button>
+                       <button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button>
+                       <a href="patient.html?id=${item.id}" class="btn btn-info">Xem</a></td>
                     </tr>`;
                     });
                     document.querySelector('tbody').innerHTML = content;
@@ -55,9 +55,9 @@ window.SystemCore = {
             <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
             data-dismiss="modal" onclick="SystemCore.editHopital(${item.id})">
                 Sửa
-            </button></td>
-            <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHopital(${item.id})">Xóa</button></td>
-            <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button>
+            <a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
         </tr>`;
                 let content = document.querySelector('tbody').innerHTML;
                 content += newRow;
@@ -115,9 +115,9 @@ window.SystemCore = {
                                     <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
                                     data-dismiss="modal" onclick="SystemCore.editHospital(${item.id})">
                                         Sửa
-                                    </button></td>
-                                    <td><button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button></td>
-                                    <td><a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
+                                    </button>
+                                    <button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${item.id})">Xóa</button>
+                                    <a href="patients.html?id=${item.id}" class="btn btn-info">Xem</a></td>
                                     </tr>`;
                             });
                             document.querySelector('tbody').innerHTML = content;

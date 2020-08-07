@@ -74,7 +74,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btn-add"
-                        onclick="SystemCore.addPatient()">Thêm</button>
+                        onclick="addPatient()">Thêm</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 </div>
             </div>
@@ -116,15 +116,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btn-save-edit"
-                        onclick="SystemCore.saveEditPatient()">Sửa</button>
+                        onclick="saveEditPatient()">Sửa</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                 </div>
             </div>
         </div>
     </div>
 </body>
-<script src="./public/js/patients.js"></script>
-<script>
-    SystemCore.fetchData();
-</script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./public/js/patient.js"></script>
 </html>

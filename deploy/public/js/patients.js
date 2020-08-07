@@ -2,12 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const hospitalId = urlParams.get('id');
 window.SystemCore = {
     baseApiUrl: `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients`,
-    hospitalApiUrl: `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}`,
     fetchData: function () {
-        fetch(this.hospitalApiUrl)
-            .then(function (response) {
-                return response.json();
-            })
         fetch(this.baseApiUrl)
             .then(function (response) {
                 return response.json();
@@ -19,7 +14,6 @@ window.SystemCore = {
                     data.map(function (item, index) {
                         content += `<tr id="data-${item.id}" >
                         <td>${item.id}</td>
-                        <td>${item.hospitalId}</td>
                         <td>${item.name}</td>
                         <td>${item.age}</td>
                         <td>${item.bed_no}</td>
@@ -27,8 +21,8 @@ window.SystemCore = {
                        <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
                        data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
                            Sửa
-                       </button></td>
-                       <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
+                       </button>
+                       <button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
                     </tr>`;
                     });
                     document.querySelector('tbody').innerHTML = content;
@@ -55,7 +49,6 @@ window.SystemCore = {
             .then(function (item) {
                 let newRow = `<tr id="data-${item.id}" >
             <td>${item.id}</td>
-            <td>${item.hospitalId}</td>
             <td>${item.name}</td>
             <td>${item.age}</td>
             <td>${item.bed_no}</td>
@@ -63,8 +56,8 @@ window.SystemCore = {
             <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
             data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
                Sửa
-            </button></td>
-            <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
             </tr>`;
                 let content = document.querySelector('tbody').innerHTML;
                 content += newRow;
@@ -115,7 +108,6 @@ window.SystemCore = {
                             data.map(function (item, index) {
                                 content += `<tr id="data-${item.id}" >
                                 <td>${item.id}</td>
-                                <td>${item.hospitalId}</td>
                                 <td>${item.name}</td>
                                 <td>${item.age}</td>
                                 <td>${item.bed_no}</td>
@@ -123,8 +115,8 @@ window.SystemCore = {
                                 <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
                                 data-dismiss="modal" onclick="SystemCore.editPatient(${item.id})">
                                    Sửa
-                                </button></td>
-                                <td><button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button></td>
+                                </button>
+                                <button type="button" class="btn btn-danger" onclick="SystemCore.removePatient(${item.id})">Xóa</button>
                                 </tr>`;
                             });
                             document.querySelector('tbody').innerHTML = content;
