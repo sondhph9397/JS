@@ -5,7 +5,7 @@ axios.get(patientUrl)
     .then(response => {
         if (response.data.length > 0) {
             let content = ``;
-            response.data.map(function (item, index) {
+            response.data.map(item => {
                 content += `<tr id="data-${item.id}">
                             <td>${item.id}</td>
                             <td>${item.name}</td>
@@ -19,17 +19,29 @@ axios.get(patientUrl)
                             <button type="button" class="btn btn-danger" 
                             onclick="removePatient(${item.id})">Xóa</button>
                             </td>
-                           
                         </tr>`;
             });
             document.querySelector('tbody').innerHTML = content;
         }
     })
-function removePatient(patienId) {
-    let removeUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patienId}`;
-    axios.delete(removeUrl)
-        .then(response => {
-            document.querySelector(`#data-${response.data.id}`).remove()
+function removePatient(patientId) {
+    let removeUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
+    swal.fire({
+        title: "Bạn có chắc chắn xóa không?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        cancelButtonText: "Hủy bỏ",
+        confirmButtonText: "Xóa",
+    })
+        .then(confirm => {
+            if (confirm.value) {
+                axios.delete(removeUrl)
+                    .then(response => {
+                        document.querySelector(`#data-${response.data.id}`).remove()
+                    })
+            }
         })
 }
 function addPatient() {
@@ -39,9 +51,50 @@ function addPatient() {
         bed_no: document.querySelector('[name="bed_no"]').value,
         description: document.querySelector('[name="description"]').value
     };
-    axios.post(patientUrl, data)
-        .then(response => {
-            let newRow = `<tr id="data-${response.data.id}">
+    $("#Add").validate({
+        rules: {
+            name: {
+                required: true,
+                maxlength: 50
+            },
+            age: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            bed_no: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            description: {
+                required: true
+            }
+        },
+        messages: {
+            name: {
+                required: "Yêu cầu nhập tên bệnh nhân",
+                maxlength: "Yêu cầu nhập tên dưới 50 ký tự"
+            },
+            age: {
+                required: "Yêu cầu nhập tuổi bệnh nhân",
+                number: "Tuổi bệnh nhân phải là số",
+                min: "Tuổi bệnh nhân phải lớn hơn 0"
+            },
+            bed_no: {
+                required: "Yêu cầu nhập số giường của bệnh nhân",
+                number: "Yêu cầu giá trị nhập vào là số",
+                min: "Yêu cầu nhập số không có số âm"
+            },
+            description: {
+                required: "Yêu cầu nhập mô tả"
+            }
+        }
+    });
+    if ($("#Add").valid()) {
+        axios.post(patientUrl, data)
+            .then(response => {
+                let newRow = `<tr id="data-${response.data.id}">
                         <td>${response.data.id}</td>
                         <td>${response.data.name}</td>
                         <td>${response.data.age}</td>
@@ -56,16 +109,18 @@ function addPatient() {
                             onclick="removePatient(${response.data.id})">Xóa</button>
                         </td>
                     </tr>`;
-            let content = document.querySelector('tbody').innerHTML;
-            content += newRow;
-            document.querySelector('tbody').innerHTML = content;
-        })
-        .then(() => {
-            $("#exampleModal").modal('hide');
-        })
+                let content = document.querySelector('tbody').innerHTML;
+                content += newRow;
+                document.querySelector('tbody').innerHTML = content;
+            })
+            .then(() => {
+                $("#exampleModal").modal('hide');
+            })
+    }
+
 }
-function editPatient(patienId) {
-    let editUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patienId}`;
+function editPatient(patientId) {
+    let editUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
     axios.get(editUrl)
         .then(response => {
             document.querySelector('[name="nameEdit"]').value = response.data.name;
@@ -75,22 +130,63 @@ function editPatient(patienId) {
             document.querySelector('.btn-save-edit').setAttribute("onclick", `saveEditPatient(${response.data.id})`);
         })
 }
-function saveEditPatient(patienId) {
+function saveEditPatient(patientId) {
     let data = {
         name: document.querySelector('[name="nameEdit"]').value,
         age: document.querySelector('[name="ageEdit"]').value,
         bed_no: document.querySelector('[name="bed_noEdit"]').value,
         description: document.querySelector('[name="descriptionEdit"]').value
     };
-    let saveEditUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patienId}`;
-    axios.put(saveEditUrl, data)
-        .then(() => {
-            axios.get(patientUrl)
-                .then(response => {
-                    if (response.data.length > 0) {
-                        let content = ``;
-                        response.data.map(function (item, index) {
-                            content += `<tr id="data-${item.id}">
+    let saveEditUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
+    $("#Edit").validate({
+        rules: {
+            nameEdit: {
+                required: true,
+                maxlength: 50
+            },
+            ageEdit: {
+                required: true,
+                number: true,
+                min: 1
+            },
+            bed_noEdit: {
+                required: true,
+                number: true,
+                min: 0
+            },
+            descriptionEdit: {
+                required: true
+            }
+        },
+        messages: {
+            nameEdit: {
+                required: "Yêu cầu nhập tên bệnh nhân",
+                maxlength: "Yêu cầu nhập tên dưới 50 ký tự"
+            },
+            ageEdit: {
+                required: "Yêu cầu nhập tuổi bệnh nhân",
+                number: "Tuổi bệnh nhân phải là số",
+                min: "Tuổi bệnh nhân phải lớn hơn 0"
+            },
+            bed_noEdit: {
+                required: "Yêu cầu nhập số giường của bệnh nhân",
+                number: "Yêu cầu giá trị nhập vào là số",
+                min: "Yêu cầu nhập số không có số âm"
+            },
+            descriptionEdit: {
+                required: "Yêu cầu nhập mô tả"
+            }
+        }
+    });
+    if ($("#Edit").valid()) {
+        axios.put(saveEditUrl, data)
+            .then(() => {
+                axios.get(patientUrl)
+                    .then(response => {
+                        if (response.data.length > 0) {
+                            let content = ``;
+                            response.data.map(function (item, index) {
+                                content += `<tr id="data-${item.id}">
                     <td>${item.id}</td>
                     <td>${item.name}</td>
                     <td>${item.age}</td>
@@ -104,12 +200,14 @@ function saveEditPatient(patienId) {
                     onclick="removePatient(${item.id})">Xóa</button>
                     </td>
                 </tr>`;
-                        });
-                        document.querySelector('tbody').innerHTML = content;
-                    }
-                })
-                .then(() => {
-                    $("#exampleModalEdit").modal('hide');
-                })
-        })
+                            });
+                            document.querySelector('tbody').innerHTML = content;
+                        }
+                    })
+                    .then(() => {
+                        $("#exampleModalEdit").modal('hide');
+                    })
+            })
+    }
+
 }
