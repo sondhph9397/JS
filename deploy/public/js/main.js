@@ -24,6 +24,36 @@ window.SystemCore = {
                 }
             })
     },
+    removeHospital: function (hospitalId) {
+        let removeUrl = `${this.baseApiUrl}/${hospitalId}`;
+        let allPatientUrl = `${this.baseApiUrl}/${hospitalId}/patients`;
+        swal.fire({
+            title: "Bạn có chắc chắn xóa không?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            cancelButtonText: "Hủy bỏ",
+            confirmButtonText: "Xóa",
+        })
+            .then(confirm => {
+                if (confirm.value) {
+                    axios.get(allPatientUrl)
+                        .then(response => {
+                            if (response.data.length > 0) {
+                                response.data.map(item => {
+                                    let eachPatientUrl = `${SystemCore.baseApiUrl}/${hospitalId}/patients/${item.id}`;
+                                    axios.delete(eachPatientUrl)
+                                })
+                            }
+                            axios.delete(removeUrl)
+                                .then(response => {
+                                    document.querySelector(`#data-${response.data.id}`).remove()
+                                })
+                        })
+                }
+            })
+    },
     addHospital: function () {
         let baseApiUrl = this.baseApiUrl;
         let data = {
@@ -75,8 +105,7 @@ window.SystemCore = {
         if ($("#add").valid()) {
             axios.post(baseApiUrl, data)
                 .then(response => {
-                    let newRow =
-                        `<tr id="data-${response.data.id}">
+                    let newRow = `<tr id="data-${response.data.id}">
                     <td>${response.data.id}</td>
                     <td>${response.data.name}</td>
                     <td><img src="${response.data.logo}" width="100"/></td>
@@ -188,36 +217,5 @@ window.SystemCore = {
                         })
                 })
         }
-    },
-    removeHospital: function (hospitalId) {
-        // gửi request để xóa dữ liệu từ mockapi
-        let removeUrl = `${this.baseApiUrl}/${hospitalId}`;
-        let allPatientUrl = `${this.baseApiUrl}/${hospitalId}/patients`;
-        swal.fire({
-            title: "Bạn có chắc chắn xóa không?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            cancelButtonText: "Hủy bỏ",
-            confirmButtonText: "Xóa",
-        })
-            .then(confirm => {
-                if (confirm.value) {
-                    axios.get(allPatientUrl)
-                        .then(response => {
-                            if (response.data.length > 0) {
-                                response.data.map(item => {
-                                    let eachPatientUrl = `${SystemCore.baseApiUrl}/${hospitalId}/patients/${item.id}`;
-                                    axios.delete(eachPatientUrl)
-                                })
-                            }
-                            axios.delete(removeUrl)
-                                .then(response => {
-                                    document.querySelector(`#data-${response.data.id}`).remove()
-                                })
-                        })
-                }
-            })
     },
 }
