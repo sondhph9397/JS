@@ -180,7 +180,7 @@ window.SystemCore = {
                     required: "Yêu cầu nhập địa chỉ bệnh viện",
                     maxlength: "Yêu cầu nhập địa chỉ dưới 199 ký tự"
                 },
-                bedNumberEdit: {
+                bed_numberEdit: {
                     required: "Yêu cầu nhập số giường bệnh viện",
                     number: "Yêu cầu giá trị nhập vào là số",
                     min: "Số giường phải lớn hơn hoặc bằng 20"

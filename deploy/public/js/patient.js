@@ -1,7 +1,13 @@
 const urlParams = new URLSearchParams(window.location.search);
 const hospitalId = urlParams.get('id');
 let patientUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients`;
-axios.get(patientUrl)
+let hospitalUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}`;
+axios.get(hospitalUrl)
+.then(response => {
+    document.querySelector('h1').innerHTML = response.data.name;
+})
+.then(() =>{
+    axios.get(patientUrl)
     .then(response => {
         if (response.data.length > 0) {
             let content = ``;
@@ -24,6 +30,8 @@ axios.get(patientUrl)
             document.querySelector('tbody').innerHTML = content;
         }
     })
+})
+
 function removePatient(patientId) {
     let removeUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
     swal.fire({
@@ -60,12 +68,13 @@ function addPatient() {
             age: {
                 required: true,
                 number: true,
-                min: 1
+                min: 1,
+                max:100
             },
             bed_no: {
                 required: true,
                 number: true,
-                min: 0
+                min: 1,
             },
             description: {
                 required: true
@@ -79,7 +88,8 @@ function addPatient() {
             age: {
                 required: "Yêu cầu nhập tuổi bệnh nhân",
                 number: "Tuổi bệnh nhân phải là số",
-                min: "Tuổi bệnh nhân phải lớn hơn 0"
+                min: "Tuổi bệnh nhân phải lớn hơn 0",
+                max: "Tuổi không được quá 100"
             },
             bed_no: {
                 required: "Yêu cầu nhập số giường của bệnh nhân",
@@ -147,7 +157,8 @@ function saveEditPatient(patientId) {
             ageEdit: {
                 required: true,
                 number: true,
-                min: 1
+                min: 1,
+                max:100
             },
             bed_noEdit: {
                 required: true,
@@ -166,7 +177,8 @@ function saveEditPatient(patientId) {
             ageEdit: {
                 required: "Yêu cầu nhập tuổi bệnh nhân",
                 number: "Tuổi bệnh nhân phải là số",
-                min: "Tuổi bệnh nhân phải lớn hơn 0"
+                min: "Tuổi bệnh nhân phải lớn hơn 0",
+                max: "Tuổi không được quá 100"
             },
             bed_noEdit: {
                 required: "Yêu cầu nhập số giường của bệnh nhân",
