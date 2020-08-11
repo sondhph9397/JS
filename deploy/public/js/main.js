@@ -123,7 +123,7 @@ window.SystemCore = {
                     document.querySelector('tbody').innerHTML = content;
                 })
                 .then(() => {
-                    $("exampleModal").modal('hide');
+                    $("#exampleModal").modal('hide');
                 })
         }
 
