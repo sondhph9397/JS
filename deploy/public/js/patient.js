@@ -2,17 +2,18 @@ const urlParams = new URLSearchParams(window.location.search);
 const hospitalId = urlParams.get('id');
 let patientUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients`;
 let hospitalUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}`;
+let allHospitalApiUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/`;
 axios.get(hospitalUrl)
-.then(response => {
-    document.querySelector('h1').innerHTML = response.data.name;
-})
-.then(() =>{
-    axios.get(patientUrl)
     .then(response => {
-        if (response.data.length > 0) {
-            let content = ``;
-            response.data.map(item => {
-                content += `<tr id="data-${item.id}">
+        document.querySelector('h1').innerHTML = response.data.name;
+    })
+    .then(() => {
+        axios.get(patientUrl)
+            .then(response => {
+                if (response.data.length > 0) {
+                    let content = ``;
+                    response.data.   map(item => {
+                        content += `<tr id="data-${item.id}">
                             <td>${item.id}</td>
                             <td>${item.name}</td>
                             <td>${item.age}</td>
@@ -26,11 +27,11 @@ axios.get(hospitalUrl)
                             onclick="removePatient(${item.id})">Xóa</button>
                             </td>
                         </tr>`;
-            });
-            document.querySelector('tbody').innerHTML = content;
-        }
+                    });
+                    document.querySelector('tbody').innerHTML = content;
+                }
+            })
     })
-})
 
 function removePatient(patientId) {
     let removeUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
@@ -69,15 +70,17 @@ function addPatient() {
                 required: true,
                 number: true,
                 min: 1,
-                max:100
+                max: 100
             },
             bed_no: {
                 required: true,
                 number: true,
                 min: 1,
+                max:1000
             },
             description: {
-                required: true
+                required: true,
+                maxlength:255
             }
         },
         messages: {
@@ -94,17 +97,22 @@ function addPatient() {
             bed_no: {
                 required: "Yêu cầu nhập số giường của bệnh nhân",
                 number: "Yêu cầu giá trị nhập vào là số",
-                min: "Yêu cầu nhập số không có số âm"
+                min: "Yêu cầu nhập số không có số âm",
+                max:"không nhập quá 1000"
             },
             description: {
-                required: "Yêu cầu nhập mô tả"
+                required: "Yêu cầu nhập mô tả",
+                maxlength:"không quá 255 kí tự"
             }
         }
     });
     if ($("#Add").valid()) {
-        axios.post(patientUrl, data)
-            .then(response => {
-                let newRow = `<tr id="data-${response.data.id}">
+        let customHospitalId = document.querySelector('#hospitalSelector').value;
+        let customPatientUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${customHospitalId}/patients`;
+        if (customHospitalId == hospitalId) {
+            axios.post(customPatientUrl, data)
+                .then(response => {
+                    let newRow = `<tr id="data-${response.data.id}">
                         <td>${response.data.id}</td>
                         <td>${response.data.name}</td>
                         <td>${response.data.age}</td>
@@ -119,15 +127,20 @@ function addPatient() {
                             onclick="removePatient(${response.data.id})">Xóa</button>
                         </td>
                     </tr>`;
-                let content = document.querySelector('tbody').innerHTML;
-                content += newRow;
-                document.querySelector('tbody').innerHTML = content;
-            })
-            .then(() => {
-                $("#exampleModal").modal('hide');
-            })
+                    let content = document.querySelector('tbody').innerHTML;
+                    content += newRow;
+                    document.querySelector('tbody').innerHTML = content;
+                })
+                .then(() => {
+                    $("#exampleModal").modal('hide');
+                })
+        } else {
+            axios.post(customPatientUrl, data)
+                .then(() => {
+                    $("#exampleModal").modal('hide');
+                })
+        }
     }
-
 }
 function editPatient(patientId) {
     let editUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
@@ -147,7 +160,6 @@ function saveEditPatient(patientId) {
         bed_no: document.querySelector('[name="bed_noEdit"]').value,
         description: document.querySelector('[name="descriptionEdit"]').value
     };
-    let saveEditUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${hospitalId}/patients/${patientId}`;
     $("#Edit").validate({
         rules: {
             nameEdit: {
@@ -158,15 +170,17 @@ function saveEditPatient(patientId) {
                 required: true,
                 number: true,
                 min: 1,
-                max:100
+                max: 100
             },
             bed_noEdit: {
                 required: true,
                 number: true,
-                min: 0
+                min: 0,
+                max:1000
             },
             descriptionEdit: {
-                required: true
+                required: true,
+                maxlength:255
             }
         },
         messages: {
@@ -183,22 +197,28 @@ function saveEditPatient(patientId) {
             bed_noEdit: {
                 required: "Yêu cầu nhập số giường của bệnh nhân",
                 number: "Yêu cầu giá trị nhập vào là số",
-                min: "Yêu cầu nhập số không có số âm"
+                min: "Yêu cầu nhập số không có số âm",
+                max:"không nhập quá 1000"
             },
             descriptionEdit: {
-                required: "Yêu cầu nhập mô tả"
+                required: "Yêu cầu nhập mô tả",
+                maxlength:"không quá 255 kí tự"
             }
         }
     });
     if ($("#Edit").valid()) {
-        axios.put(saveEditUrl, data)
-            .then(() => {
-                axios.get(patientUrl)
-                    .then(response => {
-                        if (response.data.length > 0) {
-                            let content = ``;
-                            response.data.map(function (item, index) {
-                                content += `<tr id="data-${item.id}">
+        let customHospitalId = document.querySelector("#hospitalSelectorEdit").value;
+        let customPatientUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${customHospitalId}/patients/${patientId}`;
+        let postCustomPatientUrl = `https://5f2a96d76ae5cc0016422bab.mockapi.io/hospitals/${customHospitalId}/patients`;
+        if (customHospitalId == hospitalId) {
+            axios.put(customPatientUrl, data)
+                .then(() => {
+                    axios.get(patientUrl)
+                        .then(response => {
+                            if (response.data.length > 0) {
+                                let content = ``;
+                                response.data.map(function (item, index) {
+                                    content += `<tr id="data-${item.id}">
                     <td>${item.id}</td>
                     <td>${item.name}</td>
                     <td>${item.age}</td>
@@ -212,14 +232,47 @@ function saveEditPatient(patientId) {
                     onclick="removePatient(${item.id})">Xóa</button>
                     </td>
                 </tr>`;
-                            });
-                            document.querySelector('tbody').innerHTML = content;
-                        }
-                    })
-                    .then(() => {
-                        $("#exampleModalEdit").modal('hide');
-                    })
-            })
+                                });
+                                document.querySelector('tbody').innerHTML = content;
+                            }
+                        })
+                        .then(() => {
+                            $("#exampleModalEdit").modal('hide');
+                        })
+                });
+        } else {
+            axios.post(postCustomPatientUrl, data)
+                .then(() => {
+                    axios.delete(customPatientUrl)
+                        .then(response => {
+                            document.querySelector(`#data-${response.data.id}`).remove();
+                            $("#exampleModalEdit").modal('hide');
+                        })
+                })
+        }
+
     }
 
+}
+window.onload = start;
+function start() {
+    this.hospitalChoices();
+}
+function hospitalChoices() {
+    axios.get(allHospitalApiUrl)
+        .then(response => {
+            if (response.data.length > 0) {
+                let hospitalName = ``;
+                response.data.map(item => {
+                    if (item.id == hospitalId) {
+                        hospitalName += `<option value="${item.id}" selected>${item.name}</option>`
+                    }
+                    if (item.id != hospitalId) {
+                        hospitalName += `<option value="${item.id}">${item.name}</option>`
+                    }
+                });
+                document.querySelector("#hospitalSelector").innerHTML = hospitalName;
+                document.querySelector("#hospitalSelectorEdit").innerHTML = hospitalName;
+            }
+        })
 }

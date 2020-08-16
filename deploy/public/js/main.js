@@ -79,7 +79,8 @@ window.SystemCore = {
                 bed_number: {
                     required: true,
                     number: true,
-                    min: 20
+                    min: 20,
+                    max:1000
                 }
             },
             messages: {
@@ -98,7 +99,8 @@ window.SystemCore = {
                 bed_number: {
                     required: "Yêu cầu nhập số giường bệnh viện",
                     number: "Yêu cầu giá trị nhập vào là số",
-                    min: "Số giường phải lớn hơn hoặc bằng 20"
+                    min: "Số giường phải lớn hơn hoặc bằng 20",
+                    max:"không nhập quá 1000 giường"
                 }
             }
         });
@@ -112,7 +114,7 @@ window.SystemCore = {
                     <td>${response.data.address}</td>
                     <td>${response.data.bed_number}</td>
                     <td><button type="button" class="btn btn-primary btn-edit" data-toggle="modal" data-target="#exampleModalEdit" 
-                    data-dismiss="modal" onclick="SystemCore.editHopital(${response.data.id})">
+                    data-dismiss="modal" onclick="SystemCore.editHospital(${response.data.id})">
                     Sửa
                     </button>
                     <button type="button" class="btn btn-danger" onclick="SystemCore.removeHospital(${response.data.id})">Xóa</button>
@@ -164,7 +166,8 @@ window.SystemCore = {
                 bed_numberEdit: {
                     required: true,
                     number: true,
-                    min: 20
+                    min: 20,
+                    max:1000
                 }
             },
             messages: {
@@ -183,7 +186,8 @@ window.SystemCore = {
                 bed_numberEdit: {
                     required: "Yêu cầu nhập số giường bệnh viện",
                     number: "Yêu cầu giá trị nhập vào là số",
-                    min: "Số giường phải lớn hơn hoặc bằng 20"
+                    min: "Số giường phải lớn hơn hoặc bằng 20",
+                    max:"không quá 1000 giường"
                 }
             }
         });

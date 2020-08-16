@@ -136,6 +136,10 @@
 <script src="./public/js/main.js"></script>
 <script>
     SystemCore.fetchData();
+    $('#exampleModal').on('hidden.bs.modal', function (e) {
+        $("#add").data('validator').resetForm();
+        $("#add").trigger("reset");
+    });
 </script>
 
 </html>
